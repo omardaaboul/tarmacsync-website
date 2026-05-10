@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TarmacSync — Procurement Intelligence for U.S. Airport Operators</title>
+<meta name="description" content="TarmacSync converts your procurement policy into a guided workflow — so every airport purchase is compliant, documented, and defensible." />
+<meta property="og:title" content="TarmacSync — Procurement Intelligence for Airports" />
+<meta property="og:description" content="The right procurement path. Every time." />
+<meta property="og:url" content="https://tarmacsync.com" />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Syne:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+/* ─── Variables ─────────────────────────────── */
+:root {
+  --bg:           #07070B;
+  --surface:      #0E0E16;
+  --surface-hi:   #14141F;
+  --border:       #1A1A28;
+  --border-soft:  #111118;
+  --text:         #E0DCF0;
+  --text-soft:    #5E5A78;
+  --text-mute:    #2E2C42;
+  --accent:       #F0C040;
+  --accent-dim:   #A07C20;
+  --accent-glow:  rgba(240,192,64,0.09);
+  --accent-bright:rgba(240,192,64,0.22);
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --disp: 'Fraunces', Georgia, serif;
+  --ui:   'Syne', system-ui, sans-serif;
+  --r: 3px;
+}
+
+/* ─── Reset ─────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--ui);
+  line-height:1.6;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ─── Background grid ────────────────────────── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(var(--border-soft) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border-soft) 1px,transparent 1px);
+  background-size:64px 64px;
+  opacity:.5;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ─── Radial vignette ────────────────────────── */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 30%,transparent 40%,var(--bg) 100%);
+  pointer-events:none;
+  z-index:0;
+}
+
+nav,main,footer,section{position:relative;z-index:1}
+
+/* ─── Nav ────────────────────────────────────── */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 36px;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:20;
+  background:rgba(7,7,11,0.88);
+  backdrop-filter:blur(12px);
+  animation:fadeDown .6s ease both;
+}
+.wordmark{
+  font-family:var(--mono);font-size:13px;font-weight:500;
+  letter-spacing:.1em;color:var(--text);text-decoration:none;
+}
+.wordmark em{font-style:normal;color:var(--accent)}
+.nav-pill{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--accent);
+  border:1px solid var(--accent-dim);padding:5px 11px;
+  border-radius:2px;background:var(--accent-glow);
+}
+
+/* ─── Hero ───────────────────────────────────── */
+.hero{
+  min-height:calc(100vh - 58px);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:80px 24px 100px;
+  overflow:hidden;position:relative;
+}
+
+/* Glow orb */
+.orb{
+  position:absolute;top:42%;left:50%;
+  transform:translate(-50%,-50%);
+  width:700px;height:420px;
+  background:radial-gradient(ellipse,var(--accent-glow) 0%,transparent 68%);
+  pointer-events:none;
+  animation:orb-pulse 6s ease-in-out infinite;
+}
+@keyframes orb-pulse{
+  0%,100%{opacity:.7;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}
+}
+
+/* Runway stripe */
+.runway{
+  position:absolute;left:0;right:0;
+  top:50%;transform:translateY(-50%);
+  height:1px;overflow:hidden;pointer-events:none;opacity:.1;
+}
+.runway-track{
+  height:1px;
+  background:repeating-linear-gradient(
+    90deg,var(--accent) 0,var(--accent) 36px,
+    transparent 36px,transparent 68px
+  );
+  background-size:104px 1px;
+  animation:runway-scroll 2.6s linear infinite;
+}
+@keyframes runway-scroll{
+  from{background-position:0 0}
+  to{background-position:104px 0}
+}
+
+.hero-inner{max-width:700px;width:100%}
+
+.eyebrow{
+  font-family:var(--mono);font-size:10px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--accent);
+  display:inline-flex;align-items:center;gap:10px;
+  margin-bottom:30px;
+  animation:fadeUp .7s .1s ease both;
+}
+.eyebrow::before,.eyebrow::after{
+  content:'';display:inline-block;
+  width:18px;height:1px;background:var(--accent);opacity:.6;
+}
+
+h1{
+  font-family:var(--disp);
+  font-size:clamp(44px,7.5vw,84px);
+  font-weight:400;line-height:1.06;
+  letter-spacing:-.025em;
+  color:var(--text);
+  margin-bottom:26px;
+  animation:fadeUp .7s .2s ease both;
+}
+h1 i{font-style:italic;color:var(--accent)}
+
+.sub{
+  font-size:17px;color:var(--text-soft);
+  line-height:1.7;max-width:50ch;
+  margin:0 auto 48px;
+  animation:fadeUp .7s .3s ease both;
+}
+
+/* ─── Form ───────────────────────────────────── */
+/* SETUP:
+   1. Go to formspree.io → sign up (free) → New Form
+   2. Copy your form ID (e.g. "xabcdefg")
+   3. Replace YOUR_FORM_ID in the action URL below
+   4. Set notification email to contact@tarmacsync.com
+*/
+.form-shell{
+  display:flex;gap:8px;max-width:460px;
+  margin:0 auto 18px;
+  animation:fadeUp .7s .4s ease both;
+}
+.email-in{
+  flex:1;min-width:0;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:13px 16px;
+  font-family:var(--ui);font-size:15px;
+  color:var(--text);outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.email-in::placeholder{color:var(--text-mute)}
+.email-in:focus{
+  border-color:var(--accent-dim);
+  box-shadow:0 0 0 3px var(--accent-glow);
+}
+.join-btn{
+  background:var(--accent);color:#07070B;
+  border:none;border-radius:var(--r);
+  padding:13px 20px;
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;white-space:nowrap;
+  transition:background .2s,box-shadow .2s,transform .15s;
+}
+.join-btn:hover{
+  background:#F8D468;
+  box-shadow:0 0 24px var(--accent-bright);
+  transform:translateY(-1px);
+}
+.join-btn:active{transform:none}
+.join-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+
+.success-msg{
+  display:none;
+  background:rgba(240,192,64,.07);
+  border:1px solid var(--accent-dim);
+  border-radius:var(--r);padding:14px 22px;
+  font-family:var(--mono);font-size:12px;
+  color:var(--accent);letter-spacing:.06em;
+  max-width:460px;margin:0 auto;
+}
+
+.form-foot{
+  font-family:var(--mono);font-size:10px;
+  color:var(--text-mute);letter-spacing:.08em;
+  animation:fadeUp .7s .5s ease both;
+}
+.form-foot a{color:var(--text-soft);text-decoration:none;transition:color .2s}
+.form-foot a:hover{color:var(--accent)}
+
+/* ─── Compliance scroll ──────────────────────── */
+.compliance{
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:16px 0;overflow:hidden;
+  background:var(--surface);
+}
+.compliance-track{
+  display:flex;gap:52px;
+  animation:scroll-x 22s linear infinite;
+  width:max-content;
+}
+.c-item{
+  font-family:var(--mono);font-size:10px;
+  letter-spacing:.14em;color:var(--text-mute);
+  white-space:nowrap;flex-shrink:0;
+}
+.c-item b{color:var(--accent);margin-right:7px;font-weight:400}
+@keyframes scroll-x{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+/* ─── Props ──────────────────────────────────── */
+.props{
+  padding:88px 36px;
+  max-width:1080px;margin:0 auto;
+}
+.section-label{
+  font-family:var(--mono);font-size:10px;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--text-mute);
+  text-align:center;margin-bottom:52px;
+}
+.props-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:4px;overflow:hidden;
+}
+.prop{
+  background:var(--surface);padding:40px 32px;
+  transition:background .25s;
+}
+.prop:hover{background:var(--surface-hi)}
+.prop-tag{
+  font-family:var(--mono);font-size:10px;
+  color:var(--accent);letter-spacing:.14em;
+  margin-bottom:22px;display:block;
+}
+.prop h3{
+  font-family:var(--disp);font-size:22px;font-weight:400;
+  color:var(--text);margin-bottom:14px;
+  line-height:1.2;letter-spacing:-.01em;
+}
+.prop p{font-size:14px;color:var(--text-soft);line-height:1.7}
+
+/* ─── Rule ───────────────────────────────────── */
+.rule{
+  display:flex;align-items:center;gap:18px;
+  padding:0 36px;max-width:1080px;margin:0 auto;
+  opacity:.25;
+}
+.rule-line{flex:1;height:1px;background:var(--border)}
+.rule-label{
+  font-family:var(--mono);font-size:9px;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--text-mute);
+}
+
+/* ─── Built for ──────────────────────────────── */
+.built{
+  padding:60px 36px 80px;
+  max-width:1080px;margin:0 auto;text-align:center;
+}
+.chips{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+  margin-top:24px;
+}
+.chip{
+  font-family:var(--mono);font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:8px 14px;
+  border:1px solid var(--border);border-radius:2px;
+  color:var(--text-soft);background:var(--surface);
+  transition:border-color .2s,color .2s;
+}
+.chip:hover{border-color:var(--accent-dim);color:var(--accent)}
+
+/* ─── Footer ─────────────────────────────────── */
+footer{
+  padding:28px 36px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.foot-l,.foot-r{
+  font-family:var(--mono);font-size:11px;
+  color:var(--text-mute);letter-spacing:.06em;
+}
+.foot-r a{
+  color:var(--text-soft);text-decoration:none;
+  transition:color .2s;
+}
+.foot-r a:hover{color:var(--accent)}
+.foot-r .sep{margin:0 8px;opacity:.3}
+
+/* ─── Keyframes ──────────────────────────────── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fadeDown{
+  from{opacity:0;transform:translateY(-8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ─── Mobile ─────────────────────────────────── */
+@media(max-width:680px){
+  nav{padding:15px 20px}
+  .hero{padding:60px 20px 80px}
+  h1{font-size:42px}
+  .sub{font-size:15px}
+  .form-shell{flex-direction:column}
+  .join-btn{width:100%;text-align:center}
+  .props{padding:60px 20px}
+  .props-grid{grid-template-columns:1fr}
+  .built{padding:40px 20px 60px}
+  footer{padding:22px 20px;flex-direction:column;align-items:flex-start}
+  .rule{padding:0 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a href="/" class="wordmark">Tarmac<em>Sync</em></a>
+  <span class="nav-pill">Early Access · 2026</span>
+</nav>
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="orb" aria-hidden="true"></div>
+    <div class="runway" aria-hidden="true"><div class="runway-track"></div></div>
+
+    <div class="hero-inner">
+      <div class="eyebrow">Now accepting waitlist signups</div>
+
+      <h1>The right procurement path.<br><i>Every time.</i></h1>
+
+      <p class="sub">
+        TarmacSync is procurement intelligence for U.S. airport operators —
+        guided workflows, audit-ready documentation, and federal compliance
+        checks before the purchase begins.
+      </p>
+
+      <form class="form-shell" id="wlForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <input class="email-in" type="email" name="email"
+          placeholder="you@airport.gov" required autocomplete="email"
+          aria-label="Work email address" />
+        <input type="hidden" name="_subject" value="New TarmacSync Waitlist Signup" />
+        <input type="hidden" name="source" value="tarmacsync.com" />
+        <button class="join-btn" type="submit">Join Waitlist</button>
+      </form>
+
+      <div class="success-msg" id="wlSuccess">
+        ✓ &nbsp; You're on the list — we'll be in touch.
+      </div>
+
+      <p class="form-foot">
+        No spam. Early access only. &nbsp;·&nbsp;
+        <a href="mailto:contact@tarmacsync.com">contact@tarmacsync.com</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Compliance scroll strip -->
+  <div class="compliance" aria-label="Federal frameworks covered">
+    <div class="compliance-track" aria-hidden="true">
+      <span class="c-item"><b>◈</b>FAA Order 5100.38D</span>
+      <span class="c-item"><b>◈</b>2 CFR Part 200</span>
+      <span class="c-item"><b>◈</b>Buy America</span>
+      <span class="c-item"><b>◈</b>49 CFR Part 26 — DBE</span>
+      <span class="c-item"><b>◈</b>Davis-Bacon Act</span>
+      <span class="c-item"><b>◈</b>FAA AC 150/5100-15A</span>
+      <span class="c-item"><b>◈</b>49 CFR Part 23</span>
+      <span class="c-item"><b>◈</b>AIP Grant Assurances</span>
+      <span class="c-item"><b>◈</b>FAA Order 5100.38D</span>
+      <span class="c-item"><b>◈</b>2 CFR Part 200</span>
+      <span class="c-item"><b>◈</b>Buy America</span>
+      <span class="c-item"><b>◈</b>49 CFR Part 26 — DBE</span>
+      <span class="c-item"><b>◈</b>Davis-Bacon Act</span>
+      <span class="c-item"><b>◈</b>FAA AC 150/5100-15A</span>
+      <span class="c-item"><b>◈</b>49 CFR Part 23</span>
+      <span class="c-item"><b>◈</b>AIP Grant Assurances</span>
+    </div>
+  </div>
+
+  <!-- Value props -->
+  <section class="props">
+    <p class="section-label">What TarmacSync does</p>
+    <div class="props-grid">
+      <div class="prop">
+        <span class="prop-tag">01 ——</span>
+        <h3>Guided Procurement Path</h3>
+        <p>Describe what you need to buy. TarmacSync maps the compliant path through your policy, federal requirements, and existing contract vehicles — before the process starts.</p>
+      </div>
+      <div class="prop">
+        <span class="prop-tag">02 ——</span>
+        <h3>Audit-Ready Documentation</h3>
+        <p>Every decision generates the memos, checklists, and justifications your procurement file needs — exportable and defensible for FAA, OIG, or inspector review.</p>
+      </div>
+      <div class="prop">
+        <span class="prop-tag">03 ——</span>
+        <h3>Federal Compliance Built In</h3>
+        <p>FAA AIP, 2 CFR Part 200, Buy America, DBE, Davis-Bacon — automatically flagged based on your funding source, before you commit to a path.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <div class="rule">
+    <div class="rule-line"></div>
+    <span class="rule-label">Built for</span>
+    <div class="rule-line"></div>
+  </div>
+
+  <!-- Built for -->
+  <section class="built">
+    <p class="section-label">Airport operator types</p>
+    <div class="chips">
+      <span class="chip">Non-Hub Commercial</span>
+      <span class="chip">Small Hub</span>
+      <span class="chip">GA Reliever</span>
+      <span class="chip">General Aviation</span>
+      <span class="chip">Remote &amp; Rural</span>
+      <span class="chip">Airport Directors</span>
+      <span class="chip">Procurement Officers</span>
+      <span class="chip">Airport Consultants</span>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer>
+  <span class="foot-l">© 2026 TarmacSync, LLC — Florida, USA</span>
+  <span class="foot-r">
+    <a href="mailto:contact@tarmacsync.com">contact@tarmacsync.com</a>
+    <span class="sep">·</span>
+    <a href="https://www.linkedin.com/company/tarmacsync" target="_blank" rel="noopener">LinkedIn</a>
+  </span>
+</footer>
+
+<script>
+const form = document.getElementById('wlForm');
+const success = document.getElementById('wlSuccess');
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = form.querySelector('button');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: new FormData(form),
+    });
+    if (res.ok) {
+      form.style.display = 'none';
+      success.style.display = 'block';
+    } else {
+      throw new Error();
+    }
+  } catch {
+    btn.disabled = false;
+    btn.textContent = 'Join Waitlist';
+    alert('Something went wrong — please email contact@tarmacsync.com directly.');
+  }
+});
+</script>
+</body>
+</html>
