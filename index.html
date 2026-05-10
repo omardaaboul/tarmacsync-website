@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TarmacSync — Airport Equipment Procurement, Without Weeks of Guesswork</title>
+<meta name="description" content="TarmacSync helps small and mid-sized airports identify viable piggyback contracts, flag funding-related requirements, and generate a source-backed Procurement Path Memo before choosing a purchasing route." />
+<meta property="og:title" content="TarmacSync — Procurement Intelligence for U.S. Airports" />
+<meta property="og:description" content="Airport equipment procurement, without weeks of guesswork." />
+<meta property="og:url" content="https://tarmacsync.com" />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #040814; --bg-2: #070D1E; --card: #0C1428; --card-2: #111B36; --card-hi: #16213D;
+  --line: #1A2540; --line-2: #243353;
+  --text: #F1F5FB; --text-2: #97A4BD; --text-3: #5C6885;
+  --blue: #3B82F6; --blue-2: #60A5FA; --blue-3: #2563EB;
+  --blue-glow: rgba(59,130,246,0.18); --blue-glow-2: rgba(59,130,246,0.06);
+  --green: #10B981; --green-bg: rgba(16,185,129,0.10);
+  --amber: #F59E0B; --amber-bg: rgba(245,158,11,0.10);
+  --display: 'Geist', system-ui, sans-serif;
+  --body: 'Geist', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--body); line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(36,51,83,0.18) 1px,transparent 1px), linear-gradient(90deg,rgba(36,51,83,0.18) 1px,transparent 1px); background-size: 80px 80px; pointer-events: none; z-index: 0; mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%); }
+.hero-glow { position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 1100px; height: 700px; background: radial-gradient(ellipse, var(--blue-glow) 0%, transparent 65%); pointer-events: none; z-index: 0; }
+main, nav, footer { position: relative; z-index: 1; }
+.container { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+
+/* NAV */
+nav { position: sticky; top: 0; z-index: 50; background: rgba(4,8,20,0.78); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; max-width: 1320px; margin: 0 auto; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-mark { width: 36px; height: 36px; border-radius: 9px; background: linear-gradient(135deg, var(--blue) 0%, var(--blue-3) 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px var(--blue-glow); }
+.logo-text { font-family: var(--display); font-size: 19px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a { color: var(--text-2); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-cta { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: linear-gradient(135deg, var(--blue) 0%, var(--blue-3) 100%); color: white; font-family: var(--display); font-size: 14px; font-weight: 600; border-radius: 8px; text-decoration: none; transition: transform 0.15s, box-shadow 0.2s; box-shadow: 0 4px 14px var(--blue-glow); }
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 20px var(--blue-glow); }
+
+/* HERO */
+.hero { position: relative; padding: 80px 0 100px; overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 80px; align-items: center; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--blue-glow-2); border: 1px solid var(--blue-glow); border-radius: 100px; font-size: 13px; color: var(--blue-2); font-weight: 500; margin-bottom: 28px; animation: fadeUp 0.6s 0.1s ease both; }
+h1.hero-title { font-family: var(--display); font-size: clamp(44px, 5.6vw, 76px); font-weight: 700; line-height: 1.02; letter-spacing: -0.035em; margin-bottom: 28px; animation: fadeUp 0.6s 0.2s ease both; }
+h1.hero-title em { font-style: normal; background: linear-gradient(135deg, var(--blue-2) 0%, var(--blue) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-sub { font-size: 18px; color: var(--text-2); line-height: 1.6; max-width: 540px; margin-bottom: 36px; animation: fadeUp 0.6s 0.3s ease both; }
+.hero-ctas { display: flex; gap: 12px; margin-bottom: 28px; animation: fadeUp 0.6s 0.4s ease both; }
+.btn-primary, .btn-secondary { display: inline-flex; align-items: center; gap: 10px; padding: 15px 26px; font-family: var(--display); font-size: 15px; font-weight: 600; border-radius: 10px; text-decoration: none; cursor: pointer; border: 1px solid transparent; transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s, background 0.2s; }
+.btn-primary { background: linear-gradient(135deg, var(--blue) 0%, var(--blue-3) 100%); color: white; box-shadow: 0 6px 20px var(--blue-glow); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 28px var(--blue-glow); }
+.btn-secondary { background: var(--card); color: var(--text); border-color: var(--line-2); }
+.btn-secondary:hover { background: var(--card-2); border-color: var(--blue); }
+.hero-disclaimer { font-size: 13px; color: var(--text-3); animation: fadeUp 0.6s 0.5s ease both; }
+
+/* HERO MOCKUP */
+.hero-mockup { background: linear-gradient(160deg, var(--card) 0%, var(--card-2) 100%); border: 1px solid var(--line-2); border-radius: 14px; padding: 22px; position: relative; animation: fadeUp 0.7s 0.4s ease both; box-shadow: 0 24px 60px rgba(0,0,0,0.4); }
+.mockup-header { display: flex; align-items: center; gap: 8px; padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+.mockup-dots { display: flex; gap: 6px; }
+.mockup-dots span { width: 11px; height: 11px; border-radius: 50%; background: var(--line-2); }
+.mockup-title { font-family: var(--mono); font-size: 12px; color: var(--text-3); margin-left: 12px; }
+.mockup-section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px; }
+.mockup-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.mockup-vehicle { font-family: var(--display); font-size: 22px; font-weight: 600; color: var(--text); }
+.mockup-amount { background: var(--blue-glow); border: 1px solid var(--blue); color: var(--blue-2); padding: 6px 12px; border-radius: 6px; font-family: var(--mono); font-size: 14px; font-weight: 500; }
+.mockup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.mockup-cell { background: rgba(0,0,0,0.25); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.mockup-cell-val { font-family: var(--display); font-size: 14px; font-weight: 500; color: var(--text); margin-top: 4px; }
+.mockup-output { background: rgba(0,0,0,0.25); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; margin-bottom: 18px; font-size: 13px; color: var(--text); }
+.mockup-output svg { color: var(--blue-2); flex-shrink: 0; }
+.mockup-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 6px; font-family: var(--mono); font-size: 11px; font-weight: 500; border: 1px solid; }
+.pill-green { background: var(--green-bg); color: var(--green); border-color: var(--green); }
+.pill-amber { background: var(--amber-bg); color: var(--amber); border-color: var(--amber); }
+.pill-blue { background: var(--blue-glow-2); color: var(--blue-2); border-color: var(--blue); }
+.pill svg { width: 12px; height: 12px; }
+
+/* SECTIONS */
+section.block { padding: 100px 0; position: relative; }
+section.block.alt { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.section-tag { display: inline-flex; padding: 5px 14px; background: var(--blue-glow-2); border: 1px solid var(--blue-glow); border-radius: 100px; font-size: 12px; color: var(--blue-2); font-weight: 500; margin-bottom: 18px; }
+.section-title { font-family: var(--display); font-size: clamp(34px, 4.5vw, 52px); font-weight: 700; line-height: 1.05; letter-spacing: -0.025em; color: var(--text); max-width: 780px; margin-bottom: 20px; }
+.section-title em { font-style: normal; color: var(--blue-2); }
+.section-sub { font-size: 17px; color: var(--text-2); line-height: 1.6; max-width: 640px; margin-bottom: 56px; }
+.section-head-center { text-align: center; margin-bottom: 64px; }
+.section-head-center .section-title, .section-head-center .section-sub { margin-left: auto; margin-right: auto; text-align: center; }
+
+/* PROBLEM */
+.problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.problem-card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 26px 24px; transition: border-color 0.2s, transform 0.2s; }
+.problem-card:hover { border-color: var(--line-2); transform: translateY(-2px); }
+.problem-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--blue-glow-2); border: 1px solid var(--blue-glow); display: flex; align-items: center; justify-content: center; color: var(--blue-2); margin-bottom: 18px; }
+.problem-card h4 { font-family: var(--display); font-size: 17px; font-weight: 600; line-height: 1.35; color: var(--text); letter-spacing: -0.01em; }
+
+/* SOLUTION */
+.steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.step-card { background: linear-gradient(180deg, var(--card) 0%, var(--bg-2) 100%); border: 1px solid var(--line); border-radius: 14px; padding: 28px 26px; position: relative; transition: border-color 0.2s, transform 0.2s; }
+.step-card:hover { border-color: var(--blue); transform: translateY(-3px); }
+.step-num { display: inline-block; padding: 4px 12px; background: linear-gradient(135deg, var(--blue) 0%, var(--blue-3) 100%); color: white; font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; border-radius: 100px; margin-bottom: 28px; }
+.step-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--blue-glow-2); border: 1px solid var(--blue-glow); display: flex; align-items: center; justify-content: center; color: var(--blue-2); margin-bottom: 22px; }
+.step-card h3 { font-family: var(--display); font-size: 19px; font-weight: 600; letter-spacing: -0.015em; margin-bottom: 10px; }
+.step-card p { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+
+/* MEMO */
+.memo-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.memo-header { background: linear-gradient(135deg, #0A1530 0%, #0F1F40 100%); padding: 28px 32px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.memo-label { font-family: var(--mono); font-size: 11px; color: var(--blue-2); letter-spacing: 0.16em; margin-bottom: 6px; }
+.memo-title { font-family: var(--display); font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); margin-bottom: 6px; }
+.memo-meta { font-size: 13px; color: var(--text-3); }
+.memo-value-card { background: rgba(0,0,0,0.25); border: 1px solid var(--line-2); border-radius: 10px; padding: 14px 22px; text-align: center; }
+.memo-value-label { font-family: var(--mono); font-size: 9px; color: var(--text-3); letter-spacing: 0.18em; margin-bottom: 4px; }
+.memo-value-num { font-family: var(--display); font-size: 22px; font-weight: 700; color: var(--text); }
+.memo-body { padding: 32px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.memo-section { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; }
+.memo-section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.memo-section-num { width: 28px; height: 28px; border-radius: 50%; background: var(--blue-glow); color: var(--blue-2); font-family: var(--mono); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.memo-section h4 { font-family: var(--display); font-size: 15px; font-weight: 600; color: var(--text); }
+.memo-section-lines { display: flex; flex-direction: column; gap: 7px; }
+.memo-line { height: 6px; background: var(--line); border-radius: 3px; }
+.memo-line.short { width: 60%; }
+.memo-line.med { width: 85%; }
+
+/* VALUE */
+.value-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.value-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 32px 28px; position: relative; }
+.value-card.featured { background: linear-gradient(160deg, var(--blue) 0%, var(--blue-3) 100%); border-color: var(--blue); box-shadow: 0 16px 50px var(--blue-glow); transform: scale(1.02); }
+.value-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--blue-2); margin-bottom: 18px; display: block; font-weight: 500; }
+.value-card.featured .value-tag { color: rgba(255,255,255,0.9); }
+.value-amount { font-family: var(--display); font-size: 44px; font-weight: 700; letter-spacing: -0.03em; color: var(--text); line-height: 1; margin-bottom: 8px; }
+.value-amount-label { font-size: 14px; color: var(--text-3); margin-bottom: 28px; }
+.value-card.featured .value-amount-label { color: rgba(255,255,255,0.85); }
+.value-list { list-style: none; }
+.value-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-2); margin-bottom: 12px; line-height: 1.5; }
+.value-card.featured .value-list li { color: rgba(255,255,255,0.95); }
+.value-list svg { flex-shrink: 0; margin-top: 2px; color: var(--blue-2); }
+.value-card.featured .value-list svg { color: white; }
+.value-disclaimer { margin-top: 36px; text-align: center; font-size: 13px; color: var(--text-3); font-style: italic; max-width: 720px; margin-left: auto; margin-right: auto; }
+
+/* WHO */
+.who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.who-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 32px 30px; }
+.who-card h3 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--blue-2); margin-bottom: 22px; display: flex; align-items: center; gap: 8px; }
+.who-card.not h3 { color: var(--text-3); }
+.who-list { list-style: none; }
+.who-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: var(--text); padding: 10px 0; line-height: 1.5; }
+.who-card.not .who-list li { color: var(--text-2); }
+.who-list svg { flex-shrink: 0; margin-top: 3px; }
+.who-card.not .who-list svg { color: var(--text-3); }
+.who-list .check { color: var(--blue-2); }
+
+/* BEACHHEAD */
+.beach-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.beach-card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px; display: flex; align-items: center; gap: 16px; transition: border-color 0.2s, transform 0.2s; }
+.beach-card:hover { border-color: var(--blue); transform: translateY(-2px); }
+.beach-icon { width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, var(--blue) 0%, var(--blue-3) 100%); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 4px 14px var(--blue-glow); }
+.beach-name { font-family: var(--display); font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+.beach-note { margin-top: 36px; text-align: center; font-size: 14px; color: var(--text-3); font-style: italic; max-width: 720px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+
+/* CTA */
+.cta-block { background: linear-gradient(135deg, #0A1530 0%, #0F1F40 100%); border: 1px solid var(--blue); border-radius: 18px; padding: 64px 56px; text-align: center; position: relative; overflow: hidden; }
+.cta-block::before { content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 800px; height: 500px; background: radial-gradient(ellipse, var(--blue-glow) 0%, transparent 65%); pointer-events: none; }
+.cta-block > * { position: relative; }
+.cta-block h2 { font-family: var(--display); font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spacing: -0.025em; margin-bottom: 18px; line-height: 1.05; }
+.cta-block p { font-size: 17px; color: var(--text-2); max-width: 540px; margin: 0 auto 32px; }
+.cta-form { display: flex; gap: 10px; max-width: 480px; margin: 0 auto 14px; }
+.cta-form input { flex: 1; min-width: 0; background: rgba(0,0,0,0.4); border: 1px solid var(--line-2); border-radius: 10px; padding: 14px 18px; font-family: var(--body); font-size: 15px; color: var(--text); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+.cta-form input::placeholder { color: var(--text-3); }
+.cta-form input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-glow); }
+.cta-form button { background: linear-gradient(135deg, var(--blue) 0%, var(--blue-3) 100%); color: white; border: none; border-radius: 10px; padding: 14px 24px; font-family: var(--display); font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; box-shadow: 0 6px 20px var(--blue-glow); transition: transform 0.15s, box-shadow 0.2s; }
+.cta-form button:hover { transform: translateY(-1px); box-shadow: 0 8px 28px var(--blue-glow); }
+.cta-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+.cta-success { display: none; padding: 16px 22px; background: var(--green-bg); border: 1px solid var(--green); color: var(--green); border-radius: 10px; font-size: 14px; max-width: 480px; margin: 0 auto; }
+.cta-note { font-size: 12px; color: var(--text-3); }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--line); padding: 40px 0; background: var(--bg-2); }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+.footer-text { font-size: 13px; color: var(--text-3); }
+.footer-links { display: flex; gap: 24px; font-size: 13px; }
+.footer-links a { color: var(--text-2); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--blue-2); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 1080px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 56px; }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .memo-body { grid-template-columns: repeat(2, 1fr); }
+  .beach-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-links { display: none; }
+}
+@media (max-width: 720px) {
+  .container { padding: 0 20px; }
+  .nav-inner { padding: 14px 20px; }
+  section.block { padding: 72px 0; }
+  .hero { padding: 56px 0 72px; }
+  h1.hero-title { font-size: 42px; }
+  .hero-sub { font-size: 16px; }
+  .hero-ctas { flex-direction: column; align-items: stretch; }
+  .btn-primary, .btn-secondary { justify-content: center; }
+  .problem-grid, .steps-grid, .memo-body, .value-grid, .who-grid, .beach-grid { grid-template-columns: 1fr; }
+  .value-card.featured { transform: none; }
+  .cta-block { padding: 48px 28px; }
+  .cta-form { flex-direction: column; }
+  .cta-form button { width: 100%; }
+  .memo-header { flex-direction: column; align-items: flex-start; }
+  .footer-inner { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="logo">
+      <span class="logo-mark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L4 14 L12 11 L20 14 Z"/><path d="M12 11 L12 22"/><path d="M9 19 L15 19"/></svg>
+      </span>
+      <span class="logo-text">TarmacSync</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#solution">Solution</a></li>
+      <li><a href="#memo">Memo</a></li>
+      <li><a href="#who">Who it's for</a></li>
+      <li><a href="#beachhead">Focus</a></li>
+    </ul>
+    <a href="#cta" class="nav-cta">Request Pilot Access</a>
+  </div>
+</nav>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <span class="hero-eyebrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 L14 9 L21 12 L14 15 L12 22 L10 15 L3 12 L10 9 Z"/></svg>
+            Now accepting airport design partners
+          </span>
+          <h1 class="hero-title">Airport equipment procurement, <em>without weeks of guesswork.</em></h1>
+          <p class="hero-sub">TarmacSync helps small and mid-sized airports identify viable piggyback contracts, flag funding-related requirements, and generate a source-backed Procurement Path Memo before choosing a purchasing route.</p>
+          <div class="hero-ctas">
+            <a href="#cta" class="btn-primary">Request Pilot Access <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></a>
+            <a href="#solution" class="btn-secondary">See How It Works</a>
+          </div>
+          <p class="hero-disclaimer">Procurement planning support — not legal, FAA, sponsor, or grant authority review.</p>
+        </div>
+
+        <div class="hero-mockup">
+          <div class="mockup-header">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <span class="mockup-title">tarmacsync — Procurement Path</span>
+          </div>
+          <div class="mockup-section-label">Purchase</div>
+          <div class="mockup-row">
+            <span class="mockup-vehicle">ARFF Vehicle</span>
+            <span class="mockup-amount">$850,000</span>
+          </div>
+          <div class="mockup-grid">
+            <div class="mockup-cell"><div class="mockup-section-label">Funding</div><div class="mockup-cell-val">AIP / Local Match</div></div>
+            <div class="mockup-cell"><div class="mockup-section-label">Recommended Path</div><div class="mockup-cell-val">Cooperative Contract Review</div></div>
+          </div>
+          <div class="mockup-output">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+            Output: Procurement Path Memo
+          </div>
+          <div class="mockup-pills">
+            <span class="pill pill-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Contract Options Found</span>
+            <span class="pill pill-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>Funding Review Needed</span>
+            <span class="pill pill-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/></svg>Board Approval Check</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="problem">
+    <div class="container">
+      <div class="section-head-center">
+        <span class="section-tag">The Problem</span>
+        <h2 class="section-title">Airport purchasing is <em>not normal purchasing.</em></h2>
+        <p class="section-sub">Airport teams are often forced to navigate local purchasing rules, federal funding requirements, cooperative contract options, insurance requirements, board approvals, and documentation expectations before they can even decide how to buy. For small teams, that research can take weeks.</p>
+      </div>
+      <div class="problem-grid">
+        <div class="problem-card"><div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h4>Is piggybacking allowed under our local rules?</h4></div>
+        <div class="problem-card"><div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h4>Do we need to bid, or use an existing contract?</h4></div>
+        <div class="problem-card"><div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h4>What funding rules apply — AIP, BIL, state, local?</h4></div>
+        <div class="problem-card"><div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h4>Which documents are required for the file?</h4></div>
+        <div class="problem-card"><div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h4>Will procurement, finance, or the board question the path?</h4></div>
+        <div class="problem-card"><div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h4>Are we missing insurance, DBE, Buy America, or grant flags?</h4></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="solution">
+    <div class="container">
+      <div class="section-head-center">
+        <span class="section-tag">The Solution</span>
+        <h2 class="section-title">Turn a purchase question into a <em>procurement path memo.</em></h2>
+        <p class="section-sub">TarmacSync gives airport teams a structured way to evaluate a high-dollar equipment purchase before the process gets stuck.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card"><span class="step-num">STEP 1</span><div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div><h3>Enter the purchase</h3><p>Equipment category, estimated amount, funding source, urgency, and airport profile.</p></div>
+        <div class="step-card"><span class="step-num">STEP 2</span><div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><h3>Review contract options</h3><p>TarmacSync checks curated cooperative and piggyback contract sources for relevant options.</p></div>
+        <div class="step-card"><span class="step-num">STEP 3</span><div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Flag requirements</h3><p>Local rules, funding overlays, insurance triggers, approvals, and documentation needs in one place.</p></div>
+        <div class="step-card"><span class="step-num">STEP 4</span><div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><polyline points="9 13 11 15 15 11"/></svg></div><h3>Generate the memo</h3><p>Download a Procurement Path Memo to review with airport leadership, procurement, finance, legal, or grant stakeholders.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="memo">
+    <div class="container">
+      <div class="section-head-center">
+        <span class="section-tag">Core Output</span>
+        <h2 class="section-title">The Procurement Path Memo.</h2>
+        <p class="section-sub">The memo is designed to help airport teams brief internal stakeholders before committing to a procurement route. It creates a clearer starting point for discussion with procurement, finance, legal, consultants, and funding agencies.</p>
+      </div>
+      <div class="memo-card">
+        <div class="memo-header">
+          <div>
+            <div class="memo-label">PROCUREMENT PATH MEMO</div>
+            <div class="memo-title">ARFF Vehicle Acquisition</div>
+            <div class="memo-meta">Prepared for: Airport Director · Source-backed</div>
+          </div>
+          <div class="memo-value-card">
+            <div class="memo-value-label">ESTIMATED VALUE</div>
+            <div class="memo-value-num">$850,000</div>
+          </div>
+        </div>
+        <div class="memo-body">
+          <div class="memo-section"><div class="memo-section-head"><span class="memo-section-num">01</span><h4>Purchase Summary</h4></div><div class="memo-section-lines"><span class="memo-line"></span><span class="memo-line med"></span><span class="memo-line short"></span></div></div>
+          <div class="memo-section"><div class="memo-section-head"><span class="memo-section-num">02</span><h4>Recommended Path</h4></div><div class="memo-section-lines"><span class="memo-line"></span><span class="memo-line med"></span><span class="memo-line short"></span></div></div>
+          <div class="memo-section"><div class="memo-section-head"><span class="memo-section-num">03</span><h4>Cooperative Contract Options</h4></div><div class="memo-section-lines"><span class="memo-line"></span><span class="memo-line med"></span><span class="memo-line short"></span></div></div>
+          <div class="memo-section"><div class="memo-section-head"><span class="memo-section-num">04</span><h4>Funding Source Considerations</h4></div><div class="memo-section-lines"><span class="memo-line"></span><span class="memo-line med"></span><span class="memo-line short"></span></div></div>
+          <div class="memo-section"><div class="memo-section-head"><span class="memo-section-num">05</span><h4>Required Documentation</h4></div><div class="memo-section-lines"><span class="memo-line"></span><span class="memo-line med"></span><span class="memo-line short"></span></div></div>
+          <div class="memo-section"><div class="memo-section-head"><span class="memo-section-num">06</span><h4>Local Approval Flags</h4></div><div class="memo-section-lines"><span class="memo-line"></span><span class="memo-line med"></span><span class="memo-line short"></span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="container">
+      <div class="section-head-center">
+        <span class="section-tag">Estimated Value</span>
+        <h2 class="section-title">What does it actually <em>save?</em></h2>
+      </div>
+      <div class="value-grid">
+        <div class="value-card">
+          <span class="value-tag">CONSERVATIVE CASE</span>
+          <div class="value-amount">$2,500+</div>
+          <div class="value-amount-label">Estimated annual value</div>
+          <ul class="value-list">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 qualifying purchase / year</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>30 staff hours saved</li>
+          </ul>
+        </div>
+        <div class="value-card featured">
+          <span class="value-tag">BASE CASE</span>
+          <div class="value-amount">$10,000+</div>
+          <div class="value-amount-label">Estimated annual value</div>
+          <ul class="value-list">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>2 qualifying purchases / year</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>50 staff hours saved per purchase</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <span class="value-tag">STRONG CASE</span>
+          <div class="value-amount">$25,000+</div>
+          <div class="value-amount-label">Estimated annual value</div>
+          <ul class="value-list">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>3 qualifying purchases / year</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>70 staff hours saved per purchase</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Avoided rework or unnecessary bid cycle</li>
+          </ul>
+        </div>
+      </div>
+      <p class="value-disclaimer">These are planning estimates. Actual savings depend on airport rules, sponsor structure, funding source, purchase type, and whether a viable cooperative contract path exists.</p>
+    </div>
+  </section>
+
+  <section class="block alt" id="who">
+    <div class="container">
+      <div class="section-head-center">
+        <span class="section-tag">Who It's For</span>
+        <h2 class="section-title">Designed for airport teams that <em>do not have unlimited staff.</em></h2>
+      </div>
+      <div class="who-grid">
+        <div class="who-card">
+          <h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>BEST FIT</h3>
+          <ul class="who-list">
+            <li><svg class="check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Small and mid-sized airports</li>
+            <li><svg class="check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Nonhub and small commercial service airports</li>
+            <li><svg class="check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>GA airports with active capital programs</li>
+            <li><svg class="check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>County and city-operated airports</li>
+            <li><svg class="check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Airport managers handling procurement coordination</li>
+            <li><svg class="check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Teams purchasing high-dollar equipment a few times per year</li>
+          </ul>
+        </div>
+        <div class="who-card not">
+          <h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>NOT INTENDED FOR</h3>
+          <ul class="who-list">
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Full enterprise ERP replacement</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Generic bid management</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Legal advice</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Replacing procurement authority</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Replacing FAA, sponsor, or grant review</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="beachhead">
+    <div class="container">
+      <div class="section-head-center">
+        <span class="section-tag">Beachhead Focus</span>
+        <h2 class="section-title">Built first for <em>high-dollar airport equipment.</em></h2>
+      </div>
+      <div class="beach-grid">
+        <div class="beach-card"><div class="beach-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div><span class="beach-name">ARFF Vehicles</span></div>
+        <div class="beach-card"><div class="beach-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/><path d="m20 16-4-4 4-4"/><path d="m4 8 4 4-4 4"/><path d="m16 4-4 4-4-4"/><path d="m8 20 4-4 4 4"/></svg></div><span class="beach-name">Snow Removal Equipment</span></div>
+        <div class="beach-card"><div class="beach-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></div><span class="beach-name">Passenger Boarding Bridges</span></div>
+        <div class="beach-card"><div class="beach-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><span class="beach-name">Airfield Operations Equipment</span></div>
+        <div class="beach-card"><div class="beach-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><span class="beach-name">Airport Maintenance Vehicles</span></div>
+        <div class="beach-card"><div class="beach-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><span class="beach-name">Specialized Airport Systems</span></div>
+      </div>
+      <p class="beach-note">TarmacSync starts narrow on purpose. The first version focuses on equipment categories where the purchase value is high, procurement timelines matter, and piggyback contract research can create immediate value.</p>
+    </div>
+  </section>
+
+  <section class="block" id="cta">
+    <div class="container">
+      <div class="cta-block">
+        <h2>Become a TarmacSync design partner.</h2>
+        <p>We're working with a small group of airports to shape V1. Early access. Direct line to the founder. Pricing locked at design-partner rates.</p>
+        <form class="cta-form" id="wlForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <input type="email" name="email" placeholder="Enter your work email" required autocomplete="email" aria-label="Work email" />
+          <input type="hidden" name="_subject" value="TarmacSync Pilot Access Request" />
+          <input type="hidden" name="source" value="tarmacsync.com" />
+          <button type="submit">Request Pilot Access</button>
+        </form>
+        <div class="cta-success" id="wlSuccess">✓ &nbsp;Thank you. We'll respond within two business days.</div>
+        <p class="cta-note">No spam. No sales pressure. Confidential. — contact@tarmacsync.com</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-text">© 2026 TarmacSync, LLC — Florida, USA</span>
+      <div class="footer-links">
+        <a href="mailto:contact@tarmacsync.com">contact@tarmacsync.com</a>
+        <a href="https://www.linkedin.com/company/tarmacsync" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="#top">Back to top</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const form = document.getElementById('wlForm');
+const success = document.getElementById('wlSuccess');
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = form.querySelector('button');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+  try {
+    const res = await fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) });
+    if (res.ok) { form.style.display = 'none'; success.style.display = 'block'; }
+    else { throw new Error(); }
+  } catch {
+    btn.disabled = false;
+    btn.textContent = 'Request Pilot Access';
+    alert('Something went wrong — please email contact@tarmacsync.com directly.');
+  }
+});
+</script>
+
+</body>
+</html>
